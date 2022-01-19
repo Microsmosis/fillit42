@@ -6,13 +6,13 @@
 /*   By: mrantil <mrantil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/20 15:37:08 by llonnrot          #+#    #+#             */
-/*   Updated: 2022/01/18 17:48:47 by mrantil          ###   ########.fr       */
+/*   Updated: 2022/01/19 15:11:25 by mrantil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-int	ft_read_file(int fd, char **copy_of_file)
+static int	ft_read_file(int fd, char **copy_of_file)
 {
 	t_r_var	pni;
 
@@ -23,23 +23,25 @@ int	ft_read_file(int fd, char **copy_of_file)
 	pni.buffer = ft_strnew(BUFF_SIZE);
 	while (pni.readret)
 	{
-		if (pni.readret == -1)
+		if ((pni.readret != 0 && pni.readret != 1 && pni.readret != 20
+				&& pni.readret != 21) || pni.readret == -1)
+		{
+			ft_free_read(pni);
 			return (-1);
+		}
 		pni.readret = read(fd, pni.buffer, BUFF_SIZE);
 		ft_strdel(&pni.temp2);
-		pni.temp2 = ft_strjoin(pni.temp3, pni.buffer);
-		ft_strdel(&pni.temp3);
+		pni.temp2 = ft_strupdate(pni.temp3, pni.buffer);
 		pni.temp3 = ft_strdup(pni.temp2);
 		ft_bzero(pni.buffer, ft_strlen(pni.buffer));
 		pni.count++;
 	}
-	*copy_of_file = pni.temp3;
-	ft_strdel(&pni.temp2);
-	ft_strdel(&pni.buffer);
+	*copy_of_file = ft_strdup(pni.temp3);
+	ft_free_read(pni);
 	return (pni.count);
 }
 
-char	**ft_malloc_tetrominos(int count)
+static char	**ft_malloc_tetrominos(int count)
 {
 	int		i;
 	char	**tetrominos;
@@ -58,31 +60,33 @@ char	**ft_malloc_tetrominos(int count)
 	return (tetrominos);
 }
 
-void	ft_divide_pieces(char *pieces, char **tetrominos)
+static void	ft_divide_pieces(char *copy_of_file, char **tetrominos)
 {
 	t_ints0	index;
 
 	index.i = 0;
 	index.x = 0;
 	index.y = 0;
-	index.len = ft_strlen(pieces);
+	index.len = ft_strlen(copy_of_file);
 	while (index.i < index.len)
 	{
-		if (pieces[index.i] == '\n' && pieces[index.i + 1] == '\n')
+		if (copy_of_file[index.i] == '\n' && copy_of_file[index.i + 1] == '\n')
 		{
 			index.i = index.i + 2;
 			index.x++;
 			index.y = 0;
 		}
-		tetrominos[index.x][index.y] = pieces[index.i];
+		tetrominos[index.x][index.y] = copy_of_file[index.i];
 		index.i++;
 		index.y++;
 	}
 	tetrominos[index.x][index.y - 1] = '\0';
 }
 
-int	ft_verify_file(char *copy_of_file, char	**tetrominos)
+static int	ft_verify_file(char *copy_of_file, char	**tetrominos)
 {
+	if (ft_no_dots(copy_of_file) == -1)
+		return (-1);
 	if (copy_of_file[ft_strlen(copy_of_file) - 1] != '\n')
 		return (-1);
 	if (copy_of_file[ft_strlen(copy_of_file) - 2] != '.'

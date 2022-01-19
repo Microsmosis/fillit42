@@ -6,13 +6,13 @@
 /*   By: mrantil <mrantil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 16:59:27 by mrantil           #+#    #+#             */
-/*   Updated: 2022/01/18 16:59:29 by mrantil          ###   ########.fr       */
+/*   Updated: 2022/01/19 13:26:42 by mrantil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-int	ft_free_tm(char **tetrominos, int x, char *map)
+static int	ft_free_tm(char **tetrominos, int x, char *map)
 {
 	ft_putstr(map);
 	while (x >= 0)
@@ -22,7 +22,7 @@ int	ft_free_tm(char **tetrominos, int x, char *map)
 	return (1);
 }
 
-int	ft_validspot(int i, t_ints4 ll, int *ret, char *map)
+static int	ft_validspot(int i, t_ints4 ll, int *ret, char *map)
 {
 	if (i + ret[0] < ll.len && i + ret[1] < ll.len
 		&& i + ret[2] < ll.len && i + ret[3] < ll.len
@@ -44,8 +44,6 @@ int	ft_place_to_map(int x, int i, char *map, char **tetrominos)
 	int			*ret;
 	t_ints4		ll;
 
-	if (x == -1)
-		x = 0;
 	if (tetrominos[x][0] == '\0')
 		return (ft_free_tm(tetrominos, x, map));
 	ll.letter = 'A';

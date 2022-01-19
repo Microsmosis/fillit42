@@ -6,7 +6,7 @@
 /*   By: mrantil <mrantil@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/20 15:37:45 by llonnrot          #+#    #+#             */
-/*   Updated: 2022/01/18 16:24:39 by mrantil          ###   ########.fr       */
+/*   Updated: 2022/01/19 13:56:29 by mrantil          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,13 @@ int		*ft_what_shape(char **tetrominos, char *map, int x);
 char	*ft_clear_last(char *map, int c);
 int		*ft_t_2(char **tetrominos, int i, int x, int add);
 int		*ft_l_2(char **tetrominos, int i, int x, int add);
-int		*ft_small_square(char **tetrominos, int i, int x, int add);
+int		*ft_small_map(char **tetrominos, int i, int x, int add);
 int		*ft_i(char **tetrominos, int i, int x, int add);
 int		ft_side_total_six(char *tm);
 int		ft_side_total_eight(char *tm);
 int		ft_errormain(char *copy_of_file);
 int		ft_errorfd(void);
+int		ft_no_dots(char *copy_of_file);
+void	ft_free_read(t_r_var pni);
 
 #endif
